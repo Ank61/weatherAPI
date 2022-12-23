@@ -23,7 +23,6 @@ export default function State() {
     var Sunrise;
     var Sunset;
     var mainData;
-    var CO;
 
     async function searchData() {
         let local = window.localStorage.getItem("location")
@@ -63,8 +62,8 @@ export default function State() {
         }
         else {
             const Cityy = local;
-            const Countryy = undefined
-            const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${Cityy},${Countryy}&appid=f173681fef9de51588929c936617834c&units=metric`);
+            // const Countryy = undefined
+            const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${Cityy}&appid=f173681fef9de51588929c936617834c&units=metric`);
             const data = await api_call.json();
             setWeather(data);
             mainData = data
@@ -80,9 +79,11 @@ export default function State() {
     }
 
     async function airPollutionCheck() {
-        // let local = window.localStorage.getItem("location")
-        const newlongitude = mainData.coord.lon;
-        const newlatitude = mainData.coord.lat;
+        let local = window.localStorage.getItem("location")
+        const api = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${local}&appid=f173681fef9de51588929c936617834c&units=metric`);
+        const data2 = await api.json();
+        const newlongitude = data2.coord.lon;
+        const newlatitude = data2.coord.lat;
         const api_call = await fetch(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${newlatitude}&lon=${newlongitude}&appid=f173681fef9de51588929c936617834c&units=metric`);
         const data = await api_call.json();
         console.log("Air pollution", data)
